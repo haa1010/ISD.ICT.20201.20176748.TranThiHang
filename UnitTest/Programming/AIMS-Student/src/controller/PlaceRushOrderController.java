@@ -21,9 +21,11 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import views.screen.popup.PopupScreen;
 
 /**
- * This class controls the flow of place order usecase in our AIMS project
+ * This class controls the flow of place rush order use case in AIMS project
  *
  * @author hangtt
+ * @version 1.0
+ * 
  */
 public class PlaceRushOrderController extends BaseController {
 
@@ -33,7 +35,7 @@ public class PlaceRushOrderController extends BaseController {
     private static Logger LOGGER = utils.Utils.getLogger(PlaceRushOrderController.class.getName());
 
     /**
-     * This method checks the avalibility of product when user click placeRushOrder
+     * This method checks the availability of product when user click placeRushOrder
      * button
      *
      * @throws SQLException
@@ -43,9 +45,9 @@ public class PlaceRushOrderController extends BaseController {
     }
 
     /**
-     * This method creates the new Order based on the Cart
+     * This method creates the new RushOrder based on the Cart
      *
-     * @return Order
+     * @return RushOrder
      * @throws SQLException
      */
     public RushOrder createRushOrder() throws SQLException {
@@ -59,14 +61,14 @@ public class PlaceRushOrderController extends BaseController {
     }
 
     /**
-     * This method calculates the shipping fees of order
+     * This method calculates the shipping fees of RushOrder
+     * fee = fee + 10 * number of items for rush order
      *
      * @param rushOrder
      * @return shippingFee
      */
     public int calculateShippingFee(RushOrder rushOrder) {
         Random rand = new Random();
-        // fee + 10* number of items for rush order
         int fees = (int) (((rand.nextFloat() * 10) / 100) * rushOrder.getAmount()) + rushOrder.getlstOrderMedia().size() * 10000;
         LOGGER.info("Order Amount: " + rushOrder.getAmount() + " -- Shipping Fees: " + fees);
         return fees;
@@ -80,8 +82,6 @@ public class PlaceRushOrderController extends BaseController {
      */
 
     public boolean validateRushTime(String time) {
-
-        // TODO: your work
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
@@ -96,6 +96,12 @@ public class PlaceRushOrderController extends BaseController {
             return false;
         }
     }
+    
+    /**
+     * This method check if current Cart media has Media that supports RushOrder
+     *
+     * @return boolean
+     */
 
     public boolean validateRushCartMedia() {
         try {
@@ -105,8 +111,13 @@ public class PlaceRushOrderController extends BaseController {
         }
     }
 
+    /**
+     * This method check if province in deliveryInfo is valid
+     *
+     * @param address
+     * @return boolean
+     */
     public boolean validateProvince(String address) {
-        // TODO: your work
         if(address!=null){
             address = address.toLowerCase();
             return ((!address.equals("")) && (address.matches("^[.0-9a-zA-Z\\s,]+$"))) && address.contains("hanoi");
