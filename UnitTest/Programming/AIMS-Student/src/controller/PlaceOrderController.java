@@ -18,7 +18,7 @@ import views.screen.popup.PopupScreen;
 /**
  * This class controls the flow of place order usecase in our AIMS project
  *
- * @author nguyenlm
+ * @author nguyenlm, hangtt
  */
 public class PlaceOrderController extends BaseController {
 
@@ -28,7 +28,7 @@ public class PlaceOrderController extends BaseController {
     private static Logger LOGGER = utils.Utils.getLogger(PlaceOrderController.class.getName());
 
     /**
-     * This method checks the avalibility of product when user click PlaceOrder
+     * This method checks the availability of product when user click PlaceOrder
      * button
      *
      * @throws SQLException
@@ -86,10 +86,14 @@ public class PlaceOrderController extends BaseController {
     public void validateDeliveryInfo(HashMap<String, String> info) throws InterruptedException, IOException {
 
     }
-
+    
+	/**
+	 * This method validates phone number on deliveryInfo
+	 * 
+	 * @param phoneNumber
+	 * @return boolean
+	 */
     public boolean validatePhoneNumber(String phoneNumber) {
-        // TODO: your work
-
         try {
             if (phoneNumber.length() != 10 || !phoneNumber.startsWith("0")) {
                 return false;
@@ -101,8 +105,13 @@ public class PlaceOrderController extends BaseController {
         return true;
     }
 
+    /**
+     * This method validates name on deliveryInfo
+     * 
+     * @param name
+     * @return boolean
+     */
     public boolean validateName(String name) {
-        // TODO: your work
         try {
             return ((!name.equals("")) && (name.matches("^[a-zA-Z]*$")));
         } catch (NullPointerException e) {
@@ -110,8 +119,15 @@ public class PlaceOrderController extends BaseController {
         }
     }
 
+
+    /**
+     * This method validates address on deliveryInfo
+     *
+     * @param address
+     * @return boolean
+     */
+    
     public boolean validateAddress(String address) {
-        // TODO: your work
         try {
             return ((!address.equals("")) && (address.matches("^[.0-9a-zA-Z\\s,]+$")));
         } catch (NullPointerException e) {
