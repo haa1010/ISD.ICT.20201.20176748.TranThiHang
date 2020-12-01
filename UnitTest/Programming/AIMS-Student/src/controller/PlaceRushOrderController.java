@@ -19,14 +19,26 @@ import entity.order.OrderMedia;
 import entity.order.RushOrder;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import views.screen.popup.PopupScreen;
-
 /**
  * This class controls the flow of place rush order use case in AIMS project
- *
- * @author hangtt
- * @version 1.0
  * 
+ * @author Tran Thi Hang
+ * @version 1.0
+ * <p>
+ * created_at: 30/11/2020
+ * <p>
+ * project_name: An Internet Media Store (AIMS)
+ * <p>
+ * teacher_name: Dr. Nguyen Thi Thu Trang
+ * <p>
+ * class_name: TT.CNTT ICT 02 K62
+ * <p>
+ * helpers: Teaching Assistants 
+ * 
+ *
  */
+
+
 public class PlaceRushOrderController extends BaseController {
 
     /**

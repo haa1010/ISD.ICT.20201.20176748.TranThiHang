@@ -14,12 +14,25 @@ import entity.invoice.Invoice;
 import entity.order.Order;
 import entity.order.OrderMedia;
 import views.screen.popup.PopupScreen;
-
 /**
- * This class controls the flow of place order usecase in our AIMS project
+ * This class controls the flow of place order use case in AIMS project
+ * 
+ * @author Tran Thi Hang, nguyenlm
+ * @version 1.0
+ * <p>
+ * created_at: 30/11/2020
+ * <p>
+ * project_name: An Internet Media Store (AIMS)
+ * <p>
+ * teacher_name: Dr. Nguyen Thi Thu Trang
+ * <p>
+ * class_name: TT.CNTT ICT 02 K62
+ * <p>
+ * helpers: Teaching Assistants 
+ * 
  *
- * @author nguyenlm, hangtt
  */
+
 public class PlaceOrderController extends BaseController {
 
     /**
