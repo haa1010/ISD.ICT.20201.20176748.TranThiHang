@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="aims" uuid="01d4f473-0b35-4da7-916a-28ad7fd432a4">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:D:\Hawngf\ISD.ICT.20201.20176748.TranThiHang\Programming\AIMS-Student\assets\db\aims.db</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="aims.sqlite" uuid="d49a1e24-14a2-4f55-85a8-8cc2592c0458">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/assets/db/aims.db</jdbc-url>
+    </data-source>
+  </component>
+</project>
