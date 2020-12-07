@@ -107,6 +107,12 @@ public class PlaceRushOrderController extends BaseController {
         } catch (DateTimeParseException | NullPointerException e) {
             return false;
         }
+//        catch (NullPointerException e) {
+//            return true;
+//        }
+//        catch (DateTimeParseException e) {
+//            return false;
+//        }
     }
     
     /**
