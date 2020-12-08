@@ -83,10 +83,10 @@ public class PlaceOrderController extends BaseController {
      * @throws InterruptedException
      * @throws IOException
      */
-    public void processDeliveryInfo(HashMap info) throws InterruptedException, IOException {
+    public boolean processDeliveryInfo(HashMap info) throws InterruptedException, IOException {
         LOGGER.info("Process Delivery Info");
         LOGGER.info(info.toString());
-        validateDeliveryInfo(info);
+        return validateDeliveryInfo(info);
     }
 
     /**
@@ -96,8 +96,20 @@ public class PlaceOrderController extends BaseController {
      * @throws InterruptedException
      * @throws IOException
      */
-    public void validateDeliveryInfo(HashMap<String, String> info) throws InterruptedException, IOException {
-
+    public boolean validateDeliveryInfo(HashMap<String, String> info) throws InterruptedException, IOException {
+        if(!validateName(info.get("name"))) {
+            System.out.println("Your name is invalid. Please try again!");
+            return false;
+        }
+        if(!validatePhoneNumber(info.get("phone"))) {
+            System.out.println("Phone number is invalid. Please try again!");
+            return false;
+        }
+        if(!validateAddress(info.get("address"))) {
+            System.out.println("Address is invalid. Please try again!");
+            return false;
+        }
+        return true;
     }
     
 	/**
@@ -126,7 +138,7 @@ public class PlaceOrderController extends BaseController {
      */
     public boolean validateName(String name) {
         try {
-            return ((!name.equals("")) && (name.matches("^[a-zA-Z]*$")));
+            return ((!name.equals("")) && (name.matches("^[a-zA-Z\\s]*$")));
         } catch (NullPointerException e) {
             return false;
         }

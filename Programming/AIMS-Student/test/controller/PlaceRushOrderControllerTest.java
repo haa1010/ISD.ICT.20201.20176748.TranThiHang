@@ -41,10 +41,10 @@ public class PlaceRushOrderControllerTest {
 
 	    @ParameterizedTest
 	    @CsvSource({
-	            "2007-12-03 19:15,false",
-	            "2020-12-23 10:15,true",
+	            "2007/12/03 19:15,false",
+	            "2020/12/23 10:15,true",
 	            "abc,false",
-	            ",false"
+	            ",true"
 	    })
 	    public void testRushTime(String time, boolean expected) {
 	        boolean isValid = placeRushOrderController.validateRushTime(time);

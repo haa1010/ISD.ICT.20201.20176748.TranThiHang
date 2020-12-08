@@ -95,7 +95,7 @@ public class PlaceRushOrderController extends BaseController {
 
     public boolean validateRushTime(String time) {
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
             LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
             LocalDateTime now = LocalDateTime.now();
             boolean isAfter = dateTime.isAfter(now);
@@ -104,15 +104,13 @@ public class PlaceRushOrderController extends BaseController {
                 validHour = true;
             }
             return isAfter && validHour;
-        } catch (DateTimeParseException | NullPointerException e) {
+        }
+        catch (NullPointerException e) {
+            return true;
+        }
+        catch (DateTimeParseException e) {
             return false;
         }
-//        catch (NullPointerException e) {
-//            return true;
-//        }
-//        catch (DateTimeParseException e) {
-//            return false;
-//        }
     }
     
     /**

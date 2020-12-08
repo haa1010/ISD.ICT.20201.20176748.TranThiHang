@@ -29,6 +29,7 @@
           <RowConstraints maxHeight="313.59999389648436" minHeight="10.0" prefHeight="65.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="292.80002441406253" minHeight="10.0" prefHeight="107.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="311.8000549316406" minHeight="10.0" prefHeight="156.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="311.8000549316406" minHeight="10.0" prefHeight="62.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Pane prefHeight="200.0" prefWidth="200.0">
@@ -124,6 +125,16 @@
                   </Label>
                </children>
             </Pane>
+            <TextField prefHeight="52.0" prefWidth="839.0" promptText="HH:MM (from 7am to 7pm every day)" GridPane.columnIndex="1" GridPane.rowIndex="5">
+               <font>
+                  <Font name="Segoe UI" size="24.0" />
+               </font>
+            </TextField>
+            <Label text="Delivery Time" GridPane.rowIndex="5">
+               <font>
+                  <Font name="Segoe UI" size="24.0" />
+               </font>
+            </Label>
          </children>
       </GridPane>
       <Button fx:id="btnConfirmDelivery" alignment="CENTER" contentDisplay="CENTER" layoutX="526.0" layoutY="678.0" mnemonicParsing="false" onMouseClicked="#submitDeliveryInfo" prefHeight="46.0" prefWidth="316.0" style="-fx-background-color: #5091e6; -fx-cursor: hand;" text="Confirm delivery" textFill="WHITE">

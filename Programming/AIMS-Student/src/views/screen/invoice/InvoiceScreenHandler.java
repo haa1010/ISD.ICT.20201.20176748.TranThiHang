@@ -69,6 +69,7 @@ public class InvoiceScreenHandler extends BaseScreenHandler {
 		province.setText(deliveryInfo.get("province"));
 		instructions.setText(deliveryInfo.get("instructions"));
 		address.setText(deliveryInfo.get("address"));
+		phone.setText(deliveryInfo.get("phone"));
 		subtotal.setText(Utils.getCurrencyFormat(invoice.getOrder().getAmount()));
 		shippingFees.setText(Utils.getCurrencyFormat(invoice.getOrder().getShippingFees()));
 		int amount = invoice.getOrder().getAmount() + invoice.getOrder().getShippingFees();
