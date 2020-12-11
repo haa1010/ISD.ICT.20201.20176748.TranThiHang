@@ -9,8 +9,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="129.0" prefWidth="993.0" style="-fx-padding: 10 5 5 5;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="129.0" prefWidth="850.0" style="-fx-padding: 10 5 5 5;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox fx:id="hboxMedia" layoutX="17.0" layoutY="20.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="110.0" prefWidth="976.0" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
          <children>
@@ -26,7 +27,7 @@
                   </ImageView>
                </children>
             </VBox>
-            <VBox fx:id="description" prefHeight="99.0" prefWidth="348.0">
+            <VBox fx:id="description" prefHeight="95.0" prefWidth="316.0">
                <children>
                   <Label fx:id="title" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="353.0" text="Title of Media" textAlignment="CENTER" textFill="#5091e6" wrapText="true">
                      <font>
@@ -36,11 +37,23 @@
                         <Insets />
                      </VBox.margin>
                   </Label>
-                  <Button fx:id="btnDelete" mnemonicParsing="false" prefHeight="45.0" prefWidth="166.0" text="Delete">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Button>
+                  <HBox>
+                     <children>
+                        <Button fx:id="btnDelete" mnemonicParsing="false" prefHeight="45.0" prefWidth="166.0" text="Delete">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Button>
+                        <Text fx:id="supportRushOrder" fill="#30e11c" strokeType="OUTSIDE" strokeWidth="0.0" text="Support Rush order" textAlignment="CENTER" wrappingWidth="149.4599609375">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="5.0" top="13.0" />
+                           </HBox.margin>
+                        </Text>
+                     </children>
+                  </HBox>
                </children>
                <opaqueInsets>
                   <Insets />

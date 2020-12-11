@@ -18,6 +18,7 @@ import entity.order.Order;
 import entity.order.OrderMedia;
 import entity.order.RushOrder;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
+import utils.Configs;
 import views.screen.popup.PopupScreen;
 /**
  * This class controls the flow of place rush order use case in AIMS project
@@ -39,7 +40,7 @@ import views.screen.popup.PopupScreen;
  */
 
 
-public class PlaceRushOrderController extends BaseController {
+public class PlaceRushOrderController extends PlaceOrderController {
 
     /**
      * Just for logging purpose
@@ -130,15 +131,39 @@ public class PlaceRushOrderController extends BaseController {
     /**
      * This method check if province in deliveryInfo is valid
      *
-     * @param address
+     * @param province
      * @return boolean
      */
-    public boolean validateProvince(String address) {
-        if(address!=null){
-            address = address.toLowerCase();
-            return ((!address.equals("")) && (address.matches("^[.0-9a-zA-Z\\s,]+$"))) && address.contains("hanoi");
+    public boolean validateProvince(String province) {
+        if(province!=null){
+            return (province.equals(Configs.PROVINCES[0]));
         }
         return false;
+    }
+
+    @Override
+    public boolean validateDeliveryInfo(HashMap<String, String> info) {
+        if(!validateName(info.get("name"))) {
+            System.out.println("Your name is invalid. Please try again!");
+            return false;
+        }
+        if(!validatePhoneNumber(info.get("phone"))) {
+            System.out.println("Phone number is invalid. Please try again!");
+            return false;
+        }
+        if(!validateAddress(info.get("address"))) {
+            System.out.println("Address is invalid. Please try again!");
+            return false;
+        }
+        if(!validateProvince(info.get("province"))) {
+            System.out.println("Your province is not supported rush order. Please try again!");
+            return false;
+        }
+        if(!validateRushTime(info.get("deliveryTime"))) {
+            System.out.println("Invalid delivery time. Please try again!");
+            return false;
+        }
+        return true;
     }
 
 }

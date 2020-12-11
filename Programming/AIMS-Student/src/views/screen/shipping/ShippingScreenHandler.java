@@ -27,22 +27,22 @@ import views.screen.popup.PopupScreen;
 public class ShippingScreenHandler extends BaseScreenHandler implements Initializable {
 
     @FXML
-    private Label screenTitle;
+    protected Label screenTitle;
 
     @FXML
-    private TextField name;
+    protected TextField name;
 
     @FXML
-    private TextField phone;
+    protected TextField phone;
 
     @FXML
-    private TextField address;
+    protected TextField address;
 
     @FXML
-    private TextField instructions;
+    protected TextField instructions;
 
     @FXML
-    private ComboBox<String> province;
+    protected ComboBox<String> province;
 
     private Order order;
 
@@ -63,16 +63,21 @@ public class ShippingScreenHandler extends BaseScreenHandler implements Initiali
         this.province.getItems().addAll(Configs.PROVINCES);
     }
 
-    @FXML
-    void submitDeliveryInfo(MouseEvent event) throws IOException, InterruptedException, SQLException {
-
-        // add info to messages
+    protected HashMap addInfoToMessage () {
         HashMap messages = new HashMap<>();
         messages.put("name", name.getText());
         messages.put("phone", phone.getText());
         messages.put("address", address.getText());
         messages.put("instructions", instructions.getText());
         messages.put("province", province.getValue());
+        return messages;
+    }
+
+    @FXML
+    void submitDeliveryInfo(MouseEvent event) throws IOException, InterruptedException, SQLException {
+
+        // add info to messages
+        HashMap messages = addInfoToMessage();
         boolean validateInfoResult = false;
 
         try {

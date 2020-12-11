@@ -33,8 +33,9 @@ public class Media {
         return supportRushOrder;
     }
 
-    public void setSupportRushOrder(boolean supportRushOrder) {
+    public Media setSupportRushOrder(boolean supportRushOrder) {
         this.supportRushOrder = supportRushOrder;
+        return this;
     }
 
     public Media() throws SQLException{
@@ -71,7 +72,9 @@ public class Media {
                 .setCategory(res.getString("category"))
                 .setMediaURL(res.getString("imageUrl"))
                 .setPrice(res.getInt("price"))
+                    .setSupportRushOrder(res.getBoolean("supportRushOrder"))
                 .setType(res.getString("type"));
+
         }
         return null;
     }
@@ -88,7 +91,8 @@ public class Media {
                 .setCategory(res.getString("category"))
                 .setMediaURL(res.getString("imageUrl"))
                 .setPrice(res.getInt("price"))
-                .setType(res.getString("type"));
+                    .setSupportRushOrder(res.getBoolean("supportRushOrder"))
+                    .setType(res.getString("type"));
             medium.add(media);
         }
         return medium;

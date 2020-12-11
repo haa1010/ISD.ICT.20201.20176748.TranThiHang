@@ -10,9 +10,11 @@ import java.util.logging.Logger;
 import common.exception.MediaNotAvailableException;
 import common.exception.PlaceOrderException;
 import controller.PlaceOrderController;
+import controller.PlaceRushOrderController;
 import controller.ViewCartController;
 import entity.cart.CartMedia;
 import entity.order.Order;
+import entity.order.RushOrder;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -24,6 +26,7 @@ import utils.Configs;
 import utils.Utils;
 import views.screen.BaseScreenHandler;
 import views.screen.popup.PopupScreen;
+import views.screen.shipping.ShippingRushOrderScreenHandler;
 import views.screen.shipping.ShippingScreenHandler;
 
 public class CartScreenHandler extends BaseScreenHandler {
@@ -128,6 +131,36 @@ public class CartScreenHandler extends BaseScreenHandler {
 
 		} catch (MediaNotAvailableException e) {
 			// if some media are not available then display cart and break usecase Place Order
+			displayCartWithMediaAvailability();
+		}
+	}
+
+	public void requestToPlaceRushOrder() throws SQLException, IOException {
+		try {
+			// create placeRushOrderController and process the order
+			PlaceRushOrderController placeRushOrderController = new PlaceRushOrderController();
+			if (placeRushOrderController.validateRushCartMedia()){
+				PopupScreen.error("You don't have anything to place rush");
+				return;
+			}
+
+			placeRushOrderController.placeRushOrder();
+
+			// display available media
+			displayCartWithMediaAvailability();
+
+			// create rush order
+			RushOrder rushOrder = placeRushOrderController.createRushOrder();
+
+			// display shipping form for rush order
+			ShippingRushOrderScreenHandler ShippingRushOrderScreenHandler = new ShippingRushOrderScreenHandler(this.stage, Configs.SHIPPING_RUSH_ORDER_SCREEN_PATH, rushOrder);
+			ShippingRushOrderScreenHandler.setPreviousScreen(this);
+			ShippingRushOrderScreenHandler.setHomeScreenHandler(homeScreenHandler);
+			ShippingRushOrderScreenHandler.setScreenTitle("Shipping Rush Order Screen");
+			ShippingRushOrderScreenHandler.setBController(placeRushOrderController);
+			ShippingRushOrderScreenHandler.show();
+
+		} catch (MediaNotAvailableException e) {
 			displayCartWithMediaAvailability();
 		}
 	}

@@ -20,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import utils.Configs;
 import utils.Utils;
 import views.screen.FXMLScreenHandler;
@@ -55,6 +56,9 @@ public class MediaHandler extends FXMLScreenHandler {
 	@FXML
 	protected Button btnDelete;
 
+	@FXML
+	protected Text supportRushOrder;
+
 	private CartMedia cartMedia;
 	private Spinner<Integer> spinner;
 	private CartScreenHandler cartScreen;
@@ -79,6 +83,7 @@ public class MediaHandler extends FXMLScreenHandler {
 		image.setPreserveRatio(false);
 		image.setFitHeight(110);
 		image.setFitWidth(92);
+		supportRushOrder.setVisible(cartMedia.getMedia().isSupportRushOrder());
 
 		// add delete button
 		btnDelete.setFont(Configs.REGULAR_FONT);
