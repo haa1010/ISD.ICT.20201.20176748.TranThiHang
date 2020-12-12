@@ -9,11 +9,11 @@ import java.util.logging.Logger;
 
 import entity.cart.Cart;
 import entity.cart.CartMedia;
-import common.exception.InvalidDeliveryInfoException;
 import entity.invoice.Invoice;
 import entity.order.Order;
 import entity.order.OrderMedia;
-import views.screen.popup.PopupScreen;
+import entity.order.RushOrder;
+
 /**
  * This class controls the flow of place order use case in AIMS project
  * 
@@ -72,8 +72,8 @@ public class PlaceOrderController extends BaseController {
      * @param order
      * @return Invoice
      */
-    public Invoice createInvoice(Order order) {
-        return new Invoice(order);
+    public Invoice createInvoice(Order order, RushOrder rushOrder) {
+        return new Invoice(order, rushOrder);
     }
 
     /**
@@ -171,5 +171,9 @@ public class PlaceOrderController extends BaseController {
         int fees = (int) (((rand.nextFloat() * 10) / 100) * order.getAmount());
         LOGGER.info("Order Amount: " + order.getAmount() + " -- Shipping Fees: " + fees);
         return fees;
+    }
+
+    public List getListNormalCartMedia(){
+        return Cart.getCart().getListMedia();
     }
 }

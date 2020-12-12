@@ -3,15 +3,22 @@ package views.screen.shipping;
 import common.exception.InvalidDeliveryInfoException;
 import controller.PlaceOrderController;
 import controller.PlaceRushOrderController;
+import entity.invoice.Invoice;
 import entity.order.Order;
 import entity.order.RushOrder;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import utils.Configs;
+import views.screen.BaseScreenHandler;
+import views.screen.invoice.InvoiceScreenHandler;
+import views.screen.popup.PopupScreen;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 public class ShippingRushOrderScreenHandler extends ShippingScreenHandler{
@@ -23,7 +30,7 @@ public class ShippingRushOrderScreenHandler extends ShippingScreenHandler{
 
     public ShippingRushOrderScreenHandler(Stage stage, String screenPath,RushOrder rushOrder) throws IOException {
         super(stage, screenPath, rushOrder);
-
+        this.rushOrder = rushOrder;
     }
 
     public PlaceRushOrderController getBController() {
@@ -32,9 +39,10 @@ public class ShippingRushOrderScreenHandler extends ShippingScreenHandler{
 
 
     @FXML
-    void submitRushDeliveryInfo(MouseEvent event) throws IOException, InterruptedException, SQLException {
+    void submitDeliveryInfo(MouseEvent event) throws IOException, InterruptedException, SQLException {
 
         HashMap messages = addInfoToMessage();
+        messages.put("deliveryTime", deliveryTime.getText());
         boolean validateInfoResult = false;
 
         try {
@@ -46,7 +54,43 @@ public class ShippingRushOrderScreenHandler extends ShippingScreenHandler{
 
         if (validateInfoResult) {
             calculateShippingFee(messages);
-            createInvoice();
+            rushOrder.setDeliveryInfo(messages);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+            rushOrder.setDeliveryTime(LocalDateTime.parse(deliveryTime.getText(), formatter));
+            // if there are some normal items left
+            Order order = getBController().createNormalOrder();
+            if (order.getLstOrderMedia().size() > 0) {
+                ShippingScreenHandler ShippingScreenHandler = new ShippingScreenHandler(this.stage, Configs.SHIPPING_SCREEN_PATH, order, rushOrder);
+                ShippingScreenHandler.setPreviousScreen(this);
+                ShippingScreenHandler.setHomeScreenHandler(homeScreenHandler);
+                ShippingScreenHandler.setScreenTitle("Shipping Screen");
+                ShippingScreenHandler.setBController(new PlaceOrderController());
+                ShippingScreenHandler.show();
+            }
+            else {
+                createInvoice();
+            }
         }
+    }
+
+
+    public void calculateShippingFee ( HashMap messages) {
+        // calculate shipping fees
+        int shippingFees = getBController().calculateShippingFee(rushOrder);
+        rushOrder.setShippingFees(shippingFees);
+        rushOrder.setDeliveryInfo(messages);
+    }
+
+
+    public void createInvoice () throws IOException {
+
+        // create invoice screen
+        Invoice invoice = getBController().createInvoice(null,rushOrder);
+        BaseScreenHandler InvoiceScreenHandler = new InvoiceScreenHandler(this.stage, Configs.INVOICE_SCREEN_PATH, invoice);
+        InvoiceScreenHandler.setPreviousScreen(this);
+        InvoiceScreenHandler.setHomeScreenHandler(homeScreenHandler);
+        InvoiceScreenHandler.setScreenTitle("Invoice Screen");
+        InvoiceScreenHandler.setBController(getBController());
+        InvoiceScreenHandler.show();
     }
 }

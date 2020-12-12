@@ -1,25 +1,19 @@
 package controller;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
 import entity.cart.Cart;
 import entity.cart.CartMedia;
-import common.exception.InvalidDeliveryInfoException;
-import entity.invoice.Invoice;
 import entity.order.Order;
 import entity.order.OrderMedia;
 import entity.order.RushOrder;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
 import utils.Configs;
-import views.screen.popup.PopupScreen;
 /**
  * This class controls the flow of place rush order use case in AIMS project
  * 
@@ -122,7 +116,7 @@ public class PlaceRushOrderController extends PlaceOrderController {
 
     public boolean validateRushCartMedia() {
         try {
-            return Cart.getCart().getListSupportCartMedia().size() > 0;
+            return (Cart.getCart().getListSupportCartMedia().size() > 0);
         } catch (NullPointerException e) {
             return false;
         }
@@ -143,27 +137,38 @@ public class PlaceRushOrderController extends PlaceOrderController {
 
     @Override
     public boolean validateDeliveryInfo(HashMap<String, String> info) {
-        if(!validateName(info.get("name"))) {
-            System.out.println("Your name is invalid. Please try again!");
-            return false;
-        }
-        if(!validatePhoneNumber(info.get("phone"))) {
-            System.out.println("Phone number is invalid. Please try again!");
-            return false;
-        }
-        if(!validateAddress(info.get("address"))) {
-            System.out.println("Address is invalid. Please try again!");
-            return false;
-        }
-        if(!validateProvince(info.get("province"))) {
-            System.out.println("Your province is not supported rush order. Please try again!");
-            return false;
-        }
-        if(!validateRushTime(info.get("deliveryTime"))) {
-            System.out.println("Invalid delivery time. Please try again!");
-            return false;
-        }
+//        if(!validateName(info.get("name"))) {
+//            System.out.println("Your name is invalid. Please try again!");
+//            return false;
+//        }
+//        if(!validatePhoneNumber(info.get("phone"))) {
+//            System.out.println("Phone number is invalid. Please try again!");
+//            return false;
+//        }
+//        if(!validateAddress(info.get("address"))) {
+//            System.out.println("Address is invalid. Please try again!");
+//            return false;
+//        }
+//        if(!validateProvince(info.get("province"))) {
+//            System.out.println("Your province is not supported rush order. Please try again!");
+//            return false;
+//        }
+//        if(!validateRushTime(info.get("deliveryTime"))) {
+//            System.out.println("Invalid delivery time. Please try again!");
+//            return false;
+//        }
         return true;
+    }
+
+
+    public Order createNormalOrder() throws SQLException {
+        Order order = new Order();
+        for (Object object : Cart.getCart().getListNormalCartMedia()) {
+            CartMedia cartMedia = (CartMedia) object;
+            OrderMedia orderMedia = new OrderMedia(cartMedia.getMedia(), cartMedia.getQuantity(), cartMedia.getPrice());
+            order.getlstOrderMedia().add(orderMedia);
+        }
+        return order;
     }
 
 }

@@ -8,42 +8,42 @@ import common.exception.MediaNotAvailableException;
 import entity.media.Media;
 
 public class Cart {
-    
+
     private List<CartMedia> lstCartMedia;
     private static Cart cartInstance;
 //    private List<CartMedia> listSupportCartMedia;
 
-    public static Cart getCart(){
-        if(cartInstance == null) cartInstance = new Cart();
+    public static Cart getCart() {
+        if (cartInstance == null) cartInstance = new Cart();
         return cartInstance;
     }
 
-    public Cart(List<CartMedia> lstCartMedia){
+    public Cart(List<CartMedia> lstCartMedia) {
         this.lstCartMedia = lstCartMedia;
     }
 
 
-    public Cart(){
+    public Cart() {
         lstCartMedia = new ArrayList<>();
     }
 
-    public void addCartMedia(CartMedia cm){
+    public void addCartMedia(CartMedia cm) {
         lstCartMedia.add(cm);
     }
 
-    public void removeCartMedia(CartMedia cm){
+    public void removeCartMedia(CartMedia cm) {
         lstCartMedia.remove(cm);
     }
 
-    public List getListMedia(){
+    public List getListMedia() {
         return lstCartMedia;
     }
 
-    public void emptyCart(){
+    public void emptyCart() {
         lstCartMedia.clear();
     }
 
-    public int getTotalMedia(){
+    public int getTotalMedia() {
         int total = 0;
         for (Object obj : lstCartMedia) {
             CartMedia cm = (CartMedia) obj;
@@ -52,16 +52,16 @@ public class Cart {
         return total;
     }
 
-    public int calSubtotal(){
+    public int calSubtotal() {
         int total = 0;
         for (Object obj : lstCartMedia) {
             CartMedia cm = (CartMedia) obj;
-            total += cm.getPrice()*cm.getQuantity();
+            total += cm.getPrice() * cm.getQuantity();
         }
         return total;
     }
 
-    public void checkAvailabilityOfProduct() throws SQLException{
+    public void checkAvailabilityOfProduct() throws SQLException {
         boolean allAvai = true;
         for (Object object : lstCartMedia) {
             CartMedia cartMedia = (CartMedia) object;
@@ -72,7 +72,7 @@ public class Cart {
         if (!allAvai) throw new MediaNotAvailableException("Some media not available");
     }
 
-    public CartMedia checkMediaInCart(Media media){
+    public CartMedia checkMediaInCart(Media media) {
         for (CartMedia cartMedia : lstCartMedia) {
             if (cartMedia.getMedia().getId() == media.getId()) return cartMedia;
         }
@@ -84,9 +84,22 @@ public class Cart {
         List<CartMedia> listSupportCartMedia = new ArrayList<>();
         for (Object obj : lstCartMedia) {
             CartMedia cm = (CartMedia) obj;
-            if(cm.getMedia().isSupportRushOrder()) { listSupportCartMedia.add(cm);}
+            if (cm.getMedia().isSupportRushOrder()) {
+                listSupportCartMedia.add(cm);
+            }
         }
         return listSupportCartMedia;
+    }
+
+    public List<CartMedia> getListNormalCartMedia() {
+        List<CartMedia> listNormalCartMedia = new ArrayList<>();
+        for (Object obj : lstCartMedia) {
+            CartMedia cm = (CartMedia) obj;
+            if (!cm.getMedia().isSupportRushOrder()) {
+                listNormalCartMedia.add(cm);
+            }
+        }
+        return listNormalCartMedia;
     }
 
 }

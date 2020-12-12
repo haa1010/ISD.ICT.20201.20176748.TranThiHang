@@ -10,6 +10,7 @@ import controller.PlaceOrderController;
 import common.exception.InvalidDeliveryInfoException;
 import entity.invoice.Invoice;
 import entity.order.Order;
+import entity.order.RushOrder;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -46,9 +47,17 @@ public class ShippingScreenHandler extends BaseScreenHandler implements Initiali
 
     private Order order;
 
+    private RushOrder rushOrder;
+
     public ShippingScreenHandler(Stage stage, String screenPath, Order order) throws IOException {
         super(stage, screenPath);
         this.order = order;
+        this.rushOrder = null;
+    }
+    public ShippingScreenHandler(Stage stage, String screenPath, Order order, RushOrder rushOrder) throws IOException {
+        super(stage, screenPath);
+        this.order = order;
+        this.rushOrder = rushOrder;
     }
 
     @Override
@@ -89,6 +98,7 @@ public class ShippingScreenHandler extends BaseScreenHandler implements Initiali
 
         if (validateInfoResult) {
             calculateShippingFee(messages);
+            order.setDeliveryInfo(messages);
             createInvoice();
         }
     }
@@ -98,13 +108,13 @@ public class ShippingScreenHandler extends BaseScreenHandler implements Initiali
         int shippingFees = getBController().calculateShippingFee(order);
         order.setShippingFees(shippingFees);
         order.setDeliveryInfo(messages);
-
     }
 
     public void createInvoice () throws IOException {
 
         // create invoice screen
-        Invoice invoice = getBController().createInvoice(order);
+        Invoice invoice = getBController().createInvoice(order, rushOrder);
+
         BaseScreenHandler InvoiceScreenHandler = new InvoiceScreenHandler(this.stage, Configs.INVOICE_SCREEN_PATH, invoice);
         InvoiceScreenHandler.setPreviousScreen(this);
         InvoiceScreenHandler.setHomeScreenHandler(homeScreenHandler);
