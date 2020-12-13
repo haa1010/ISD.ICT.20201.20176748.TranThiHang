@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,9 +15,10 @@ import entity.order.Order;
 import entity.order.OrderMedia;
 import entity.order.RushOrder;
 import utils.Configs;
+
 /**
  * This class controls the flow of place rush order use case in AIMS project
- * 
+ *
  * @author Tran Thi Hang
  * @version 1.0
  * <p>
@@ -28,9 +30,7 @@ import utils.Configs;
  * <p>
  * class_name: TT.CNTT ICT 02 K62
  * <p>
- * helpers: Teaching Assistants 
- * 
- *
+ * helpers: Teaching Assistants
  */
 
 
@@ -57,15 +57,31 @@ public class PlaceRushOrderController extends PlaceOrderController {
      * @return RushOrder
      * @throws SQLException
      */
-    public RushOrder createRushOrder() throws SQLException {
+    public RushOrder createRushOrder() {
         RushOrder rushOrder = new RushOrder();
         for (Object object : Cart.getCart().getListMedia()) {
             CartMedia cartMedia = (CartMedia) object;
-            OrderMedia orderMedia = new OrderMedia(cartMedia.getMedia(), cartMedia.getQuantity(), cartMedia.getPrice());
-            rushOrder.getlstOrderMedia().add(orderMedia);
+            if(cartMedia.getMedia().isSupportRushOrder()) {
+                OrderMedia orderMedia = new OrderMedia(cartMedia.getMedia(), cartMedia.getQuantity(), cartMedia.getPrice());
+                rushOrder.getlstOrderMedia().add(orderMedia);
+            }
         }
         return rushOrder;
     }
+
+
+    public Order createNormalOrder() {
+        Order order = new Order();
+        for (Object object : Cart.getCart().getListMedia()) {
+            CartMedia cartMedia = (CartMedia) object;
+            if(!cartMedia.getMedia().isSupportRushOrder()) {
+                OrderMedia orderMedia = new OrderMedia(cartMedia.getMedia(), cartMedia.getQuantity(), cartMedia.getPrice());
+                order.getlstOrderMedia().add(orderMedia);
+            }
+        }
+        return order;
+    }
+
 
     /**
      * This method calculates the shipping fees of RushOrder
@@ -89,6 +105,7 @@ public class PlaceRushOrderController extends PlaceOrderController {
      */
 
     public boolean validateRushTime(String time) {
+        if (time.isEmpty()) return true;
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
             LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
@@ -99,15 +116,13 @@ public class PlaceRushOrderController extends PlaceOrderController {
                 validHour = true;
             }
             return isAfter && validHour;
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             return true;
-        }
-        catch (DateTimeParseException e) {
+        } catch (DateTimeParseException e) {
             return false;
         }
     }
-    
+
     /**
      * This method check if current Cart media has Media that supports RushOrder
      *
@@ -129,46 +144,29 @@ public class PlaceRushOrderController extends PlaceOrderController {
      * @return boolean
      */
     public boolean validateProvince(String province) {
-        if(province!=null){
+        if (province != null) {
             return (province.equals(Configs.PROVINCES[0]));
         }
         return false;
     }
 
     @Override
-    public boolean validateDeliveryInfo(HashMap<String, String> info) {
-//        if(!validateName(info.get("name"))) {
-//            System.out.println("Your name is invalid. Please try again!");
-//            return false;
-//        }
-//        if(!validatePhoneNumber(info.get("phone"))) {
-//            System.out.println("Phone number is invalid. Please try again!");
-//            return false;
-//        }
-//        if(!validateAddress(info.get("address"))) {
-//            System.out.println("Address is invalid. Please try again!");
-//            return false;
-//        }
-//        if(!validateProvince(info.get("province"))) {
-//            System.out.println("Your province is not supported rush order. Please try again!");
-//            return false;
-//        }
-//        if(!validateRushTime(info.get("deliveryTime"))) {
-//            System.out.println("Invalid delivery time. Please try again!");
-//            return false;
-//        }
-        return true;
+    public boolean processDeliveryInfo(HashMap info) throws IOException, InterruptedException {
+        LOGGER.info("Process Rush Order Delivery Info");
+        LOGGER.info(info.toString());
+        return validateDeliveryInfo(info) && validateRushDeliveryInfo(info);
     }
 
-
-    public Order createNormalOrder() throws SQLException {
-        Order order = new Order();
-        for (Object object : Cart.getCart().getListNormalCartMedia()) {
-            CartMedia cartMedia = (CartMedia) object;
-            OrderMedia orderMedia = new OrderMedia(cartMedia.getMedia(), cartMedia.getQuantity(), cartMedia.getPrice());
-            order.getlstOrderMedia().add(orderMedia);
+    public boolean validateRushDeliveryInfo(HashMap<String, String> info) {
+        if (!validateProvince(info.get("province"))) {
+            System.out.println("Your province is not supported rush order. Please try again!");
+            return false;
         }
-        return order;
+        if (!validateRushTime(info.get("deliveryTime"))) {
+            System.out.println("Invalid delivery time. Please try again!");
+            return false;
+        }
+        return true;
     }
 
 }

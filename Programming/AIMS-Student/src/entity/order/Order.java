@@ -7,14 +7,14 @@ import java.util.List;
 import utils.Configs;
 
 public class Order {
-    
+
     protected int shippingFees;
 
 
     protected List lstOrderMedia;
     protected HashMap<String, String> deliveryInfo;
 
-    public Order(){
+    public Order() {
         this.lstOrderMedia = new ArrayList<>();
     }
 
@@ -30,11 +30,11 @@ public class Order {
         this.lstOrderMedia = lstOrderMedia;
     }
 
-    public void addOrderMedia(OrderMedia om){
+    public void addOrderMedia(OrderMedia om) {
         this.lstOrderMedia.add(om);
     }
 
-    public void removeOrderMedia(OrderMedia om){
+    public void removeOrderMedia(OrderMedia om) {
         this.lstOrderMedia.remove(om);
     }
 
@@ -62,13 +62,16 @@ public class Order {
         this.deliveryInfo = deliveryInfo;
     }
 
-    public int getAmount(){
+    public int getAmount() {
         double amount = 0;
+
         for (Object object : lstOrderMedia) {
-            OrderMedia om = (OrderMedia) object;
-            amount += om.getPrice();
+            if( object instanceof OrderMedia) {
+                OrderMedia om = (OrderMedia) object;
+                amount += om.getPrice();
+            }
         }
-        return (int) (amount + (Configs.PERCENT_VAT/100)*amount);
+        return (int) (amount + (Configs.PERCENT_VAT / 100) * amount);
     }
 
 }

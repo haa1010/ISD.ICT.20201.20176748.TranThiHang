@@ -23,7 +23,6 @@ import javafx.stage.Stage;
 import utils.Configs;
 import views.screen.BaseScreenHandler;
 import views.screen.invoice.InvoiceScreenHandler;
-import views.screen.popup.PopupScreen;
 
 public class ShippingScreenHandler extends BaseScreenHandler implements Initializable {
 

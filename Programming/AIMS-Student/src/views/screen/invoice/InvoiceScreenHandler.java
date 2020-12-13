@@ -13,7 +13,6 @@ import entity.order.OrderMedia;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -24,134 +23,148 @@ import views.screen.payment.PaymentScreenHandler;
 
 public class InvoiceScreenHandler extends BaseScreenHandler {
 
-	private static Logger LOGGER = Utils.getLogger(InvoiceScreenHandler.class.getName());
+    private static Logger LOGGER = Utils.getLogger(InvoiceScreenHandler.class.getName());
 
-	@FXML
-	private Label pageTitle;
+    @FXML
+    private Label pageTitle;
 
-	@FXML
-	private Label name;
+    @FXML
+    private Label name;
 
-	@FXML
-	private Label phone;
+    @FXML
+    private Label phone;
 
-	@FXML
-	private Label province;
+    @FXML
+    private Label province;
 
-	@FXML
-	private Label address;
+    @FXML
+    private Label address;
 
-	@FXML
-	private Label instructions;
+    @FXML
+    private Label instructions;
 
-	@FXML
-	private Label deliveryTimeLabel;
-	@FXML
-	private Label deliveryTime;
+    @FXML
+    private Label deliveryTimeLabel;
+    @FXML
+    private Label deliveryTime;
 
-	@FXML
-	private Label subtotal;
+    @FXML
+    private Label subtotal;
 
-	@FXML
-	private Label shippingFees;
+    @FXML
+    private Label shippingFees;
 
-	@FXML
-	private Label total;
+    @FXML
+    private Label total;
 
-	@FXML
-	private VBox vboxItems;
+    @FXML
+    private VBox vboxItems;
 
-	@FXML
-	private Button rushInfo;
-	@FXML
-	private Button normalInfo;
+    @FXML
+    private Button rushInfo;
+    @FXML
+    private Button normalInfo;
+    @FXML
+    private Label invoiceType;
 
-	private Invoice invoice;
-
-
-	public InvoiceScreenHandler(Stage stage, String screenPath, Invoice invoice) throws IOException {
-		super(stage, screenPath);
-		this.invoice = invoice;
-		setInvoiceInfo();
-		rushInfo.setOnMouseClicked(e-> {
-			setRushInvoiceInfo();
-		});
-		normalInfo.setOnMouseClicked(e->{
-			setInvoiceInfo();
-		});
-	}
-
-	private void setRushInvoiceInfo() {
-		HashMap<String, String> deliveryInfo = invoice.getRushOrder().getDeliveryInfo();
-		name.setText(deliveryInfo.get("name"));
-		province.setText(deliveryInfo.get("province"));
-		instructions.setText(deliveryInfo.get("instructions"));
-		address.setText(deliveryInfo.get("address"));
-		phone.setText(deliveryInfo.get("phone"));
-		deliveryTime.setText(deliveryInfo.get("deliveryTime"));
-		deliveryTime.setVisible(true);
-		deliveryTimeLabel.setVisible(true);
-		subtotal.setText(Utils.getCurrencyFormat(invoice.getRushOrder().getAmount()));
-		shippingFees.setText(Utils.getCurrencyFormat(invoice.getRushOrder().getShippingFees()));
-		int amount = invoice.getOrder().getAmount() + invoice.getRushOrder().getShippingFees();
-		total.setText(Utils.getCurrencyFormat(amount));
-		invoice.setAmount(amount);
-		vboxItems.getChildren().clear();
-		invoice.getRushOrder().getlstOrderMedia().forEach(orderMedia -> {
-			try {
-				MediaInvoiceScreenHandler mis = new MediaInvoiceScreenHandler(Configs.INVOICE_MEDIA_SCREEN_PATH);
-				mis.setOrderMedia((OrderMedia) orderMedia);
-				vboxItems.getChildren().add(mis.getContent());
-			} catch (IOException | SQLException e) {
-				System.err.println("errors: " + e.getMessage());
-				throw new ProcessInvoiceException(e.getMessage());
-			}
-
-		});
-
-	}
-
-	private void setInvoiceInfo(){
-		HashMap<String, String> deliveryInfo = invoice.getOrder().getDeliveryInfo();
-		name.setText(deliveryInfo.get("name"));
-		province.setText(deliveryInfo.get("province"));
-		instructions.setText(deliveryInfo.get("instructions"));
-		address.setText(deliveryInfo.get("address"));
-		phone.setText(deliveryInfo.get("phone"));
+    private Invoice invoice;
 
 
-		deliveryTime.setVisible(false);
-		deliveryTimeLabel.setVisible(false);
+    public InvoiceScreenHandler(Stage stage, String screenPath, Invoice invoice) throws IOException {
+        super(stage, screenPath);
+        this.invoice = invoice;
 
-		subtotal.setText(Utils.getCurrencyFormat(invoice.getOrder().getAmount()));
-		shippingFees.setText(Utils.getCurrencyFormat(invoice.getOrder().getShippingFees()));
-		int amount = invoice.getOrder().getAmount() + invoice.getOrder().getShippingFees();
-		total.setText(Utils.getCurrencyFormat(amount));
-		invoice.setAmount(amount);
-		vboxItems.getChildren().clear();
-		invoice.getOrder().getlstOrderMedia().forEach(orderMedia -> {
-			try {
-				MediaInvoiceScreenHandler mis = new MediaInvoiceScreenHandler(Configs.INVOICE_MEDIA_SCREEN_PATH);
-				mis.setOrderMedia((OrderMedia) orderMedia);
-				vboxItems.getChildren().add(mis.getContent());
-			} catch (IOException | SQLException e) {
-				System.err.println("errors: " + e.getMessage());
-				throw new ProcessInvoiceException(e.getMessage());
-			}
-			
-		});
+        rushInfo.setDisable(invoice.getRushOrder() == null);
+        normalInfo.setDisable(invoice.getOrder() == null);
 
-	}
+        if (invoice.getRushOrder() != null) {
+            setRushInvoiceInfo();
+        } else {
+            setInvoiceInfo();
+            invoiceType.setText("Normal Order Shipping Information");
+        }
+        rushInfo.setOnMouseClicked(e -> {
+            invoiceType.setText("Rush Order Shipping Information");
+            setRushInvoiceInfo();
+        });
+        normalInfo.setOnMouseClicked(e -> {
+            invoiceType.setText("Normal Order Shipping Information");
+            setInvoiceInfo();
+        });
+    }
 
-	@FXML
-	void confirmInvoice(MouseEvent event) throws IOException {
-		BaseScreenHandler paymentScreen = new PaymentScreenHandler(this.stage, Configs.PAYMENT_SCREEN_PATH, invoice);
-		paymentScreen.setBController(new PaymentController());
-		paymentScreen.setPreviousScreen(this);
-		paymentScreen.setHomeScreenHandler(homeScreenHandler);
-		paymentScreen.setScreenTitle("Payment Screen");
-		paymentScreen.show();
-		LOGGER.info("Confirmed invoice");
-	}
+    private void setDeliveryInfo ( HashMap<String, String> deliveryInfo ,boolean isRush){
+        name.setText(deliveryInfo.get("name"));
+        province.setText(deliveryInfo.get("province"));
+        instructions.setText(deliveryInfo.get("instructions"));
+        address.setText(deliveryInfo.get("address"));
+        phone.setText(deliveryInfo.get("phone"));
+        deliveryTime.setText(deliveryInfo.get("deliveryTime"));
+
+        deliveryTime.setVisible(isRush);
+        deliveryTimeLabel.setVisible(isRush);
+    }
+
+    private void getOrderMediaToDisplay (Order order) {
+        order.getlstOrderMedia().forEach(orderMedia -> {
+            try {
+                MediaInvoiceScreenHandler mis = new MediaInvoiceScreenHandler(Configs.INVOICE_MEDIA_SCREEN_PATH);
+                mis.setOrderMedia((OrderMedia) orderMedia);
+                vboxItems.getChildren().add(mis.getContent());
+            } catch (IOException | SQLException e) {
+                System.err.println("errors: " + e.getMessage());
+                throw new ProcessInvoiceException(e.getMessage());
+            }
+
+        });
+    }
+
+    private void setRushInvoiceInfo() {
+
+        if (invoice.getRushOrder() == null) return;
+        HashMap<String, String> deliveryInfo = invoice.getRushOrder().getDeliveryInfo();
+
+        setDeliveryInfo(deliveryInfo, true);
+
+        subtotal.setText(Utils.getCurrencyFormat(invoice.getRushOrder().getAmount()));
+        shippingFees.setText(Utils.getCurrencyFormat(invoice.getRushOrder().getShippingFees()));
+        int amount = invoice.getRushOrder().getAmount() + invoice.getRushOrder().getShippingFees();
+        total.setText(Utils.getCurrencyFormat(amount));
+        invoice.setAmount(amount);
+
+        vboxItems.getChildren().clear();
+
+        getOrderMediaToDisplay(invoice.getRushOrder());
+
+    }
+
+    private void setInvoiceInfo() {
+        if (invoice.getOrder() == null) return;
+        HashMap<String, String> deliveryInfo = invoice.getOrder().getDeliveryInfo();
+
+        setDeliveryInfo(deliveryInfo, false);
+
+
+        subtotal.setText(Utils.getCurrencyFormat(invoice.getOrder().getAmount()));
+        shippingFees.setText(Utils.getCurrencyFormat(invoice.getOrder().getShippingFees()));
+        int amount = invoice.getOrder().getAmount() + invoice.getOrder().getShippingFees();
+        total.setText(Utils.getCurrencyFormat(amount));
+        invoice.setAmount(amount);
+        vboxItems.getChildren().clear();
+
+        getOrderMediaToDisplay(invoice.getOrder());
+
+    }
+
+    @FXML
+    void confirmInvoice(MouseEvent event) throws IOException {
+        BaseScreenHandler paymentScreen = new PaymentScreenHandler(this.stage, Configs.PAYMENT_SCREEN_PATH, invoice);
+        paymentScreen.setBController(new PaymentController());
+        paymentScreen.setPreviousScreen(this);
+        paymentScreen.setHomeScreenHandler(homeScreenHandler);
+        paymentScreen.setScreenTitle("Payment Screen");
+        paymentScreen.show();
+        LOGGER.info("Confirmed invoice");
+    }
 
 }
