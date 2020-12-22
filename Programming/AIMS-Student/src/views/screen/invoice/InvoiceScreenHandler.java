@@ -93,6 +93,11 @@ public class InvoiceScreenHandler extends BaseScreenHandler {
         });
 
         // display total money
+        setMoneyFormula();
+
+    }
+
+    private void setMoneyFormula(){
         int subTotal = 0, fees = 0;
         if (invoice.getOrder() != null) {
             subTotal += invoice.getOrder().getAmount();
@@ -118,6 +123,7 @@ public class InvoiceScreenHandler extends BaseScreenHandler {
         phone.setText(deliveryInfo.get("phone"));
         deliveryTime.setText(deliveryInfo.get("deliveryTime"));
 
+        // delivery time is visible only for rush order
         deliveryTime.setVisible(isRush);
         deliveryTimeLabel.setVisible(isRush);
     }
@@ -132,7 +138,6 @@ public class InvoiceScreenHandler extends BaseScreenHandler {
                 System.err.println("errors: " + e.getMessage());
                 throw new ProcessInvoiceException(e.getMessage());
             }
-
         });
     }
 
@@ -142,13 +147,6 @@ public class InvoiceScreenHandler extends BaseScreenHandler {
         HashMap<String, String> deliveryInfo = invoice.getRushOrder().getDeliveryInfo();
 
         setDeliveryInfo(deliveryInfo, true);
-
-//        subtotal.setText(Utils.getCurrencyFormat(invoice.getRushOrder().getAmount()));
-//        shippingFees.setText(Utils.getCurrencyFormat(invoice.getRushOrder().getShippingFees()));
-//        int amount = invoice.getRushOrder().getAmount() + invoice.getRushOrder().getShippingFees();
-//        total.setText(Utils.getCurrencyFormat(amount));
-//        invoice.setAmountRushOrder(amount);
-
         vboxItems.getChildren().clear();
 
         getOrderMediaToDisplay(invoice.getRushOrder());
@@ -160,14 +158,6 @@ public class InvoiceScreenHandler extends BaseScreenHandler {
         HashMap<String, String> deliveryInfo = invoice.getOrder().getDeliveryInfo();
 
         setDeliveryInfo(deliveryInfo, false);
-
-//        int subTotal = invoice.getAmount() + invoice.getAmountRushOrder();
-//        subtotal.setText(Utils.getCurrencyFormat(subTotal));
-//        shippingFees.setText(Utils.getCurrencyFormat(invoice.getOrder().getShippingFees()));
-//        int amount = subTotal + invoice.getOrder().getShippingFees();
-//        total.setText(Utils.getCurrencyFormat(amount));
-//        invoice.setAmount(amount);
-
         vboxItems.getChildren().clear();
 
         getOrderMediaToDisplay(invoice.getOrder());

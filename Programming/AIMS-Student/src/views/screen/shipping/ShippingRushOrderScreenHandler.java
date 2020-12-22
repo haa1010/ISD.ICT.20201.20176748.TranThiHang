@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 import utils.Configs;
 import views.screen.BaseScreenHandler;
 import views.screen.invoice.InvoiceScreenHandler;
-import views.screen.popup.PopupScreen;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -74,7 +73,7 @@ public class ShippingRushOrderScreenHandler extends ShippingScreenHandler{
             }
             else {
                 // create invoice screen
-                Invoice invoice = getBController().createInvoice(order, rushOrder);
+                Invoice invoice = getBController().createInvoice(null, rushOrder);
 
                 BaseScreenHandler InvoiceScreenHandler = new InvoiceScreenHandler(this.stage, Configs.INVOICE_SCREEN_PATH, invoice);
                 InvoiceScreenHandler.setPreviousScreen(this);
@@ -99,7 +98,7 @@ public class ShippingRushOrderScreenHandler extends ShippingScreenHandler{
     }
 
 
-    public void createInvoice () throws IOException {
+    public void createInvoiceScreen () throws IOException {
 
         // create invoice screen
         Invoice invoice = getBController().createInvoice(null,rushOrder);

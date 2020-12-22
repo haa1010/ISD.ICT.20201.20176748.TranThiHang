@@ -6,6 +6,8 @@ import java.util.List;
 
 import controller.BaseController;
 import entity.invoice.Invoice;
+import entity.order.Order;
+import entity.order.RushOrder;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -68,5 +70,15 @@ public class BaseScreenHandler extends FXMLScreenHandler {
 		this.homeScreenHandler = HomeScreenHandler;
 	}
 
-
+//	public void createInvoiceScreen (Order order, RushOrder rushOrder) throws IOException {
+//
+//		// create invoice screen
+//		Invoice invoice = getBController().createInvoice(order, rushOrder);
+//
+//		BaseScreenHandler InvoiceScreenHandler = new InvoiceScreenHandler(this.stage, Configs.INVOICE_SCREEN_PATH, invoice);
+//		InvoiceScreenHandler.setHomeScreenHandler(homeScreenHandler);
+//		InvoiceScreenHandler.setScreenTitle("Invoice Screen");
+//		InvoiceScreenHandler.setBController(getBController());
+//		InvoiceScreenHandler.show();
+//	}
 }

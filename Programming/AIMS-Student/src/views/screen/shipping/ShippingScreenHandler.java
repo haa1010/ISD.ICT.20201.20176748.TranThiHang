@@ -122,7 +122,6 @@ public class ShippingScreenHandler extends BaseScreenHandler implements Initiali
         Invoice invoice = getBController().createInvoice(order, rushOrder);
 
         BaseScreenHandler InvoiceScreenHandler = new InvoiceScreenHandler(this.stage, Configs.INVOICE_SCREEN_PATH, invoice);
-        InvoiceScreenHandler.setPreviousScreen(this);
         InvoiceScreenHandler.setHomeScreenHandler(homeScreenHandler);
         InvoiceScreenHandler.setScreenTitle("Invoice Screen");
         InvoiceScreenHandler.setBController(getBController());
