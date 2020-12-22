@@ -83,7 +83,7 @@ public class PlaceOrderController extends BaseController {
      * @throws InterruptedException
      * @throws IOException
      */
-    public boolean processDeliveryInfo(HashMap info) throws InterruptedException, IOException {
+    public String processDeliveryInfo(HashMap info) throws InterruptedException, IOException {
         LOGGER.info("Process Delivery Info");
         LOGGER.info(info.toString());
         return validateDeliveryInfo(info);
@@ -96,20 +96,20 @@ public class PlaceOrderController extends BaseController {
      * @throws InterruptedException
      * @throws IOException
      */
-    public boolean validateDeliveryInfo(HashMap<String, String> info) throws InterruptedException, IOException {
+    public String validateDeliveryInfo(HashMap<String, String> info) throws InterruptedException, IOException {
         if(!validateName(info.get("name"))) {
-            System.out.println("Your name is invalid. Please try again!");
-            return false;
+            return "Your name is invalid. Please try again!";
         }
         if(!validatePhoneNumber(info.get("phone"))) {
-            System.out.println("Phone number is invalid. Please try again!");
-            return false;
+            return "Phone number is invalid. Please try again!";
+        }
+        if(info.get("province") == null || info.get("province").isEmpty()) {
+            return "Please choose your province!";
         }
         if(!validateAddress(info.get("address"))) {
-            System.out.println("Address is invalid. Please try again!");
-            return false;
+            return "Address is invalid. Please try again!";
         }
-        return true;
+        return "";
     }
     
 	/**

@@ -91,9 +91,26 @@ public class InvoiceScreenHandler extends BaseScreenHandler {
             invoiceType.setText("Normal Order Shipping Information");
             setInvoiceInfo();
         });
+
+        // display total money
+        int subTotal = 0, fees = 0;
+        if (invoice.getOrder() != null) {
+            subTotal += invoice.getOrder().getAmount();
+            fees += invoice.getOrder().getShippingFees();
+        }
+        if (invoice.getRushOrder() != null) {
+            subTotal += invoice.getRushOrder().getAmount();
+            fees += invoice.getRushOrder().getShippingFees();
+        }
+        subtotal.setText(Utils.getCurrencyFormat(subTotal));
+        shippingFees.setText(Utils.getCurrencyFormat(fees));
+
+        int totalAmount = subTotal + fees;
+        total.setText(Utils.getCurrencyFormat(totalAmount));
+        invoice.setAmount(totalAmount);
     }
 
-    private void setDeliveryInfo ( HashMap<String, String> deliveryInfo ,boolean isRush){
+    private void setDeliveryInfo(HashMap<String, String> deliveryInfo, boolean isRush) {
         name.setText(deliveryInfo.get("name"));
         province.setText(deliveryInfo.get("province"));
         instructions.setText(deliveryInfo.get("instructions"));
@@ -105,7 +122,7 @@ public class InvoiceScreenHandler extends BaseScreenHandler {
         deliveryTimeLabel.setVisible(isRush);
     }
 
-    private void getOrderMediaToDisplay (Order order) {
+    private void getOrderMediaToDisplay(Order order) {
         order.getlstOrderMedia().forEach(orderMedia -> {
             try {
                 MediaInvoiceScreenHandler mis = new MediaInvoiceScreenHandler(Configs.INVOICE_MEDIA_SCREEN_PATH);
@@ -126,11 +143,11 @@ public class InvoiceScreenHandler extends BaseScreenHandler {
 
         setDeliveryInfo(deliveryInfo, true);
 
-        subtotal.setText(Utils.getCurrencyFormat(invoice.getRushOrder().getAmount()));
-        shippingFees.setText(Utils.getCurrencyFormat(invoice.getRushOrder().getShippingFees()));
-        int amount = invoice.getRushOrder().getAmount() + invoice.getRushOrder().getShippingFees();
-        total.setText(Utils.getCurrencyFormat(amount));
-        invoice.setAmount(amount);
+//        subtotal.setText(Utils.getCurrencyFormat(invoice.getRushOrder().getAmount()));
+//        shippingFees.setText(Utils.getCurrencyFormat(invoice.getRushOrder().getShippingFees()));
+//        int amount = invoice.getRushOrder().getAmount() + invoice.getRushOrder().getShippingFees();
+//        total.setText(Utils.getCurrencyFormat(amount));
+//        invoice.setAmountRushOrder(amount);
 
         vboxItems.getChildren().clear();
 
@@ -144,12 +161,13 @@ public class InvoiceScreenHandler extends BaseScreenHandler {
 
         setDeliveryInfo(deliveryInfo, false);
 
+//        int subTotal = invoice.getAmount() + invoice.getAmountRushOrder();
+//        subtotal.setText(Utils.getCurrencyFormat(subTotal));
+//        shippingFees.setText(Utils.getCurrencyFormat(invoice.getOrder().getShippingFees()));
+//        int amount = subTotal + invoice.getOrder().getShippingFees();
+//        total.setText(Utils.getCurrencyFormat(amount));
+//        invoice.setAmount(amount);
 
-        subtotal.setText(Utils.getCurrencyFormat(invoice.getOrder().getAmount()));
-        shippingFees.setText(Utils.getCurrencyFormat(invoice.getOrder().getShippingFees()));
-        int amount = invoice.getOrder().getAmount() + invoice.getOrder().getShippingFees();
-        total.setText(Utils.getCurrencyFormat(amount));
-        invoice.setAmount(amount);
         vboxItems.getChildren().clear();
 
         getOrderMediaToDisplay(invoice.getOrder());

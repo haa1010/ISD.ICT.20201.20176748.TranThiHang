@@ -43,7 +43,8 @@ public class ShippingRushOrderScreenHandler extends ShippingScreenHandler{
 
         HashMap messages = addInfoToMessage();
         messages.put("deliveryTime", deliveryTime.getText());
-        boolean validateInfoResult = false;
+        String validateInfoResult = "";
+        errorMessage.setText("");
 
         try {
             // process and validate delivery info
@@ -52,11 +53,15 @@ public class ShippingRushOrderScreenHandler extends ShippingScreenHandler{
             throw new InvalidDeliveryInfoException(e.getMessage());
         }
 
-        if (validateInfoResult) {
+        if (validateInfoResult.isEmpty()) {
             calculateShippingFee(messages);
             rushOrder.setDeliveryInfo(messages);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
-            rushOrder.setDeliveryTime(LocalDateTime.parse(deliveryTime.getText(), formatter));
+
+            String time = deliveryTime.getText();
+            if(!time.isEmpty()) {
+                rushOrder.setDeliveryTime(LocalDateTime.parse(deliveryTime.getText(), formatter));
+            }
             // if there are some normal items left
             Order order = getBController().createNormalOrder();
             if (order.getLstOrderMedia().size() > 0) {
@@ -68,8 +73,20 @@ public class ShippingRushOrderScreenHandler extends ShippingScreenHandler{
                 ShippingScreenHandler.show();
             }
             else {
-                createInvoice();
+                // create invoice screen
+                Invoice invoice = getBController().createInvoice(order, rushOrder);
+
+                BaseScreenHandler InvoiceScreenHandler = new InvoiceScreenHandler(this.stage, Configs.INVOICE_SCREEN_PATH, invoice);
+                InvoiceScreenHandler.setPreviousScreen(this);
+                InvoiceScreenHandler.setHomeScreenHandler(homeScreenHandler);
+                InvoiceScreenHandler.setScreenTitle("Invoice Screen");
+                InvoiceScreenHandler.setBController(getBController());
+                InvoiceScreenHandler.show();
             }
+
+        }
+        else {
+            errorMessage.setText(validateInfoResult);
         }
     }
 

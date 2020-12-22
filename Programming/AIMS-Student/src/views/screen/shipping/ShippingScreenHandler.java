@@ -42,6 +42,9 @@ public class ShippingScreenHandler extends BaseScreenHandler implements Initiali
     protected TextField instructions;
 
     @FXML
+    protected Label errorMessage;
+
+    @FXML
     protected ComboBox<String> province;
 
     private Order order;
@@ -86,7 +89,8 @@ public class ShippingScreenHandler extends BaseScreenHandler implements Initiali
 
         // add info to messages
         HashMap messages = addInfoToMessage();
-        boolean validateInfoResult = false;
+        String validateInfoResult = "";
+        errorMessage.setText("");
 
         try {
             // process and validate delivery info
@@ -95,10 +99,13 @@ public class ShippingScreenHandler extends BaseScreenHandler implements Initiali
             throw new InvalidDeliveryInfoException(e.getMessage());
         }
 
-        if (validateInfoResult) {
+        if (validateInfoResult.isEmpty()) {
             calculateShippingFee(messages);
             order.setDeliveryInfo(messages);
-            createInvoice();
+            createInvoiceScreen();
+        }
+        else {
+            errorMessage.setText(validateInfoResult);
         }
     }
 
@@ -109,7 +116,7 @@ public class ShippingScreenHandler extends BaseScreenHandler implements Initiali
         order.setDeliveryInfo(messages);
     }
 
-    public void createInvoice () throws IOException {
+    public void createInvoiceScreen () throws IOException {
 
         // create invoice screen
         Invoice invoice = getBController().createInvoice(order, rushOrder);

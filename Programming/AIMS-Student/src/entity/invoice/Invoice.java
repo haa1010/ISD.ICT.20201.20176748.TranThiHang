@@ -16,6 +16,16 @@ public class Invoice {
     }
 
     private RushOrder rushOrder;
+
+    public int getAmountRushOrder() {
+        return amountRushOrder;
+    }
+
+    public void setAmountRushOrder(int amountRushOrder) {
+        this.amountRushOrder = amountRushOrder;
+    }
+
+    private int amountRushOrder;
     private int amount;
 
     public Invoice(Order order, RushOrder rushOrder){

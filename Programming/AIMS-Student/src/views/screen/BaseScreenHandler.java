@@ -5,10 +5,13 @@ import java.util.Hashtable;
 import java.util.List;
 
 import controller.BaseController;
+import entity.invoice.Invoice;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import utils.Configs;
 import views.screen.home.HomeScreenHandler;
+import views.screen.invoice.InvoiceScreenHandler;
 
 public class BaseScreenHandler extends FXMLScreenHandler {
 
@@ -64,5 +67,6 @@ public class BaseScreenHandler extends FXMLScreenHandler {
 	public void setHomeScreenHandler(HomeScreenHandler HomeScreenHandler) {
 		this.homeScreenHandler = HomeScreenHandler;
 	}
+
 
 }

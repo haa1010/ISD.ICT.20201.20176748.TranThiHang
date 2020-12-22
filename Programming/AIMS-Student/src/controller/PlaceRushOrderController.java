@@ -151,22 +151,24 @@ public class PlaceRushOrderController extends PlaceOrderController {
     }
 
     @Override
-    public boolean processDeliveryInfo(HashMap info) throws IOException, InterruptedException {
+    public String processDeliveryInfo(HashMap info) throws IOException, InterruptedException {
         LOGGER.info("Process Rush Order Delivery Info");
         LOGGER.info(info.toString());
-        return validateDeliveryInfo(info) && validateRushDeliveryInfo(info);
+        String vdi = validateDeliveryInfo(info);
+        if(vdi.isEmpty()) {
+            return validateRushDeliveryInfo(info);
+        }
+        else return vdi;
     }
 
-    public boolean validateRushDeliveryInfo(HashMap<String, String> info) {
+    public String validateRushDeliveryInfo(HashMap<String, String> info) {
         if (!validateProvince(info.get("province"))) {
-            System.out.println("Your province is not supported rush order. Please try again!");
-            return false;
+            return "Your province is not supported rush order. Please try again!";
         }
         if (!validateRushTime(info.get("deliveryTime"))) {
-            System.out.println("Invalid delivery time. Please try again!");
-            return false;
+            return "Invalid delivery time. Please try again!";
         }
-        return true;
+        return "";
     }
 
 }
